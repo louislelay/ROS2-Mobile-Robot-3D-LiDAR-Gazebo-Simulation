@@ -2,6 +2,10 @@
 
 Simulate a mobile robot equipped with a 3D LiDAR sensor in Gazebo Classic, using ROS2 for seamless integration. This project allows the robot to navigate a simulated environment while capturing detailed 3D point cloud data, which can be visualized in real-time using RViz.
 
+![Robot in Gazebo Simulation](img/robot_gz_sim.png)
+
+![Output by RViz](img/rviz_pcl2.png)
+
 ## Prerequisites
 
 - ROS2 Humble (tested)

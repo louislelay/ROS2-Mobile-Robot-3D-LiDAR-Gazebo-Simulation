@@ -1,0 +1,185 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" >
+
+    <joint name="lidar_base_joint" type="fixed">
+        <parent link="chassis"/>
+        <child link="base"/>
+        <origin xyz="0.2 0 0.18" rpy="0 0 0"/>
+    </joint>
+
+    <link name="base">
+        <visual>
+            <geometry>
+                <cylinder radius="0.04267" length="0.05867"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.04267" length="0.05867"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="1.2" length="0.05867" radius="0.04267">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+
+    <gazebo reference="base">
+        <material>Gazebo/Red</material>
+    </gazebo>
+
+
+    <joint name="laser_joint" type="fixed">
+        <parent link="base"/>
+        <child link="top"/>
+        <origin xyz="0 0 0.067" rpy="0 0 0"/>
+    </joint>
+
+    <link name="top">
+        <visual>
+            <geometry>
+                <cylinder radius="0.04267" length="0.07357"/>
+            </geometry>
+            <material name="red"/>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.04267" length="0.07357"/>
+            </geometry>
+        </collision>
+        <xacro:inertial_cylinder mass="0.1" length="0.07357" radius="0.04267">
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </xacro:inertial_cylinder>
+    </link>
+
+
+<!--
+    <gazebo reference="top">
+        <material>Gazebo/Red</material>
+
+        <sensor name="laser" type="ray">
+            <pose> 0 0 0 0 0 0 </pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>360</samples>
+                        <min_angle>-3.14</min_angle>
+                        <max_angle>3.14</max_angle>
+                    </horizontal>
+                </scan>
+
+                <range>
+                    <min>0.3</min>
+                    <max>12</max>
+                </range>
+            </ray>
+
+            <plugin name="laser_controller" filename="libgazebo_ros_ray_sensor.so">
+                <ros>
+                    <argument>~/out:=scan</argument>
+                </ros>
+                <output_type>sensor_msgs/LaserScan</output_type>
+                <frame_name>top</frame_name>
+            </plugin>
+        </sensor>
+    </gazebo>
+-->
+
+<!--
+    <gazebo reference="top">
+        <material>Gazebo/Red</material>
+
+        <sensor name="laser" type="ray">
+            <pose>0.0 0.0 0.0 0.0 0.0 0.0</pose>
+            <visualize>true</visualize>
+            <update_rate>10</update_rate>
+
+            <ray>
+                <scan>
+                    <horizontal>
+                        <samples>300</samples>
+                        <min_angle>-0.5236</min_angle>
+                        <max_angle>0.5236</max_angle>
+                    </horizontal>
+
+                    <vertical>
+                        <samples>100</samples>
+                        <min_angle>-0.5236</min_angle>
+                        <max_angle>0.5236</max_angle>
+                    </vertical>
+                </scan>
+
+                <range>
+                    <min>0.05</min>
+                    <max>50.0</max>
+                </range>
+            </ray>
+
+            <plugin name="RayPlugin" filename="libgazebo_ros_block_laser.so">
+                <ros>
+                    <argument>~/out:=scan</argument>
+                </ros>
+                <output_type>sensor_msgs/PointCloud2</output_type>
+                <frameName>top</frameName>
+            </plugin>
+        </sensor>
+    </gazebo>
+-->
+
+
+    <gazebo reference="top">
+        <material>Gazebo/Red</material>
+
+        <sensor type="ray" name="velodyne2-HDL32E">
+          <pose>0 0 0 0 0 0</pose>
+          <visualize>false</visualize>
+          <update_rate>10</update_rate>
+
+          <ray>
+                <scan>
+                    <horizontal>
+                        <samples>220</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-3.142</min_angle>
+                        <max_angle>3.142</max_angle>
+                    </horizontal>
+                    <vertical>
+                        <samples>32</samples>
+                        <resolution>1</resolution>
+                        <min_angle>-0.535</min_angle>
+                        <max_angle> 0.186</max_angle>
+                    </vertical>
+                </scan>
+
+                <range>
+                    <min>0.3</min>
+                    <max>131.0</max>
+                    <resolution>0.001</resolution>
+                </range>
+
+                <noise>
+                    <type>gaussian</type>
+                    <mean>0.0</mean>
+                    <stddev>0.0</stddev>
+                </noise>
+          </ray>
+
+          <plugin name="gazebo_ros_laser_controller" filename="libgazebo_ros_velodyne_laser.so">
+            <ros>
+              <namespace>/velodyne2</namespace>
+              <remapping>~/out:=velodyne_points2</remapping>
+            </ros>
+
+            <frame_name>top</frame_name>
+            <organize_cloud>false</organize_cloud>
+            <min_range>0.9</min_range>
+            <max_range>130.0</max_range>
+            <gaussian_noise>0.008</gaussian_noise>
+          </plugin>
+        </sensor>
+    </gazebo>
+
+</robot>
